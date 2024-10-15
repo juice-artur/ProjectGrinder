@@ -5,6 +5,7 @@
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "PaperZDAnimationComponent.h"
 #include "PaperZDAnimInstance.h"
 
@@ -14,8 +15,7 @@ APGHero::APGHero()
 
     SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
     SpringArmComponent->SetupAttachment(GetRootComponent());
-    SpringArmComponent->bUsePawnControlRotation = false;
-    SpringArmComponent->SocketOffset = FVector(0.0f, 100.0f, 80.0f);
+    SpringArmComponent->bUsePawnControlRotation = true;
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
@@ -60,6 +60,18 @@ void APGHero::BeginPlay()
     }
 
     Super::BeginPlay();
+}
+
+void APGHero::Tick(float DeltaSeconds)
+{
+    if (this->GetMovementComponent()->Velocity.X > 0)
+    {
+        GetController()->SetControlRotation(FRotator3d());
+    }
+    else if (this->GetMovementComponent()->Velocity.X < 0)
+    {
+        GetController()->SetControlRotation(FRotator3d(0, 180, 0));
+    }
 }
 
 void APGHero::Landed(const FHitResult& Hit)

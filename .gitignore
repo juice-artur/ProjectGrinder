@@ -49,3 +49,5 @@ Session.vim
 
 # Visual Studio
 .vs
+
+!format_all_files.bat
