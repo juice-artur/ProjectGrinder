@@ -3,4 +3,4 @@
 #include "ProjectGrinder.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, ProjectGrinder, "ProjectGrinder" );
+IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, ProjectGrinder, "ProjectGrinder");
