@@ -47,8 +47,4 @@ protected:
     virtual void Tick(float DeltaSeconds) override;
 
     virtual void Landed(const FHitResult& Hit) override;
-
-    virtual void OnJumped_Implementation() override;
-    virtual void OnWalkingOffLedge_Implementation(const FVector& PreviousFloorImpactNormal, const FVector& PreviousFloorContactNormal,
-        const FVector& PreviousLocation, float TimeDelta) override;
 };

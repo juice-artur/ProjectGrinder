@@ -15,7 +15,7 @@ APGHero::APGHero()
 
     SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
     SpringArmComponent->SetupAttachment(GetRootComponent());
-    SpringArmComponent->bUsePawnControlRotation = true;
+    SpringArmComponent->bUsePawnControlRotation = false;
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
@@ -25,11 +25,6 @@ void APGHero::OnMoveForward(const FInputActionValue& Value)
 {
     float Movement = Value.Get<float>();
     AddMovementInput(FVector(1, 0, 0), Movement);
-}
-
-void APGHero::OnJump(const FInputActionValue& Value)
-{
-    Jump();
 }
 
 void APGHero::OnJumpReleased(const FInputActionValue& Value)
@@ -43,7 +38,7 @@ void APGHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
     check(Input);
     Input->BindAction(MoveForwardInputAction, ETriggerEvent::Triggered, this, &APGHero::OnMoveForward);
-    Input->BindAction(JumpInputAction, ETriggerEvent::Triggered, this, &APGHero::Jump);
+    Input->BindAction(JumpInputAction, ETriggerEvent::Triggered, this, &APGHero::OnJump);
     Input->BindAction(JumpInputAction, ETriggerEvent::Completed, this, &APGHero::OnJumpReleased);
 }
 
@@ -80,15 +75,15 @@ void APGHero::Landed(const FHitResult& Hit)
     this->GetAnimationComponent()->GetAnimInstance()->JumpToNode("Landed");
 }
 
-void APGHero::OnJumped_Implementation()
+void APGHero::OnJump(const FInputActionValue& Value)
 {
-    Super::OnJumped_Implementation();
-    this->GetAnimationComponent()->GetAnimInstance()->JumpToNode("JumpAction");
-}
+    Jump();
 
-void APGHero::OnWalkingOffLedge_Implementation(
-    const FVector& PreviousFloorImpactNormal, const FVector& PreviousFloorContactNormal, const FVector& PreviousLocation, float TimeDelta)
-{
-    Super::OnWalkingOffLedge_Implementation(PreviousFloorImpactNormal, PreviousFloorContactNormal, PreviousLocation, TimeDelta);
-    this->GetAnimationComponent()->GetAnimInstance()->JumpToNode("JumpAction");
+    if (UPaperZDAnimationComponent* AnimationComp = this->GetAnimationComponent())
+    {
+        if (UPaperZDAnimInstance* AnimInst = AnimationComp->GetAnimInstance())
+        {
+            AnimInst->JumpToNode("JumpAction");
+        }
+    }
 }
