@@ -51,3 +51,5 @@ Session.vim
 .vs
 
 !format_all_files.bat
+!.clang-format
+!README.md
